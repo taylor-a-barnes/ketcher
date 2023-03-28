@@ -19,10 +19,10 @@ const GridWrapper = styled('div')`
   max-width: 100vw;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 270px 320px;
+  grid-template-columns: 270px 320px 1fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
-  grid-template-areas: 'Ketcher Panel Output';
+  grid-template-areas: 'Panel Output Ketcher';
   & > div {
     border: 1px solid grey;
   }
@@ -90,6 +90,7 @@ const App = () => {
             onInit={(ketcher: Ketcher) => {
               ;(global as any).ketcher = ketcher
               ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
+              global.ketcher.setMolecule('CN=C=O')
             }}
           />
         </KetcherBox>
