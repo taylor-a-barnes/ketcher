@@ -5665,6 +5665,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"clsx@npm:^1.1.0":
+  version: 1.2.1
+  resolution: "clsx@npm:1.2.1"
+  checksum: 30befca8019b2eb7dbad38cff6266cf543091dae2825c856a62a8ccf2c3ab9c2907c4d12b288b73101196767f66812365400a227581484a05f968b0307cfaf12
+  languageName: node
+  linkType: hard
+
 "co@npm:^4.6.0":
   version: 4.6.0
   resolution: "co@npm:4.6.0"
@@ -6648,6 +6655,7 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-scripts: ^5.0.1
+    react-tabs: ^4.2.1
     serve: ^13.0.2
     typescript: ^4.5.5
     web-vitals: ^2.1.4
@@ -14621,7 +14629,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -15046,6 +15054,18 @@ __metadata:
   bin:
     react-scripts: bin/react-scripts.js
   checksum: 92afa2f245c7092ccc97d5609dc7a2130616262e34da7f15072d9442e2d2e1d4909a91022abd1faac1336eb17c5525a10d9bd43e1ae374c7ec941ca20addca68
+  languageName: node
+  linkType: hard
+
+"react-tabs@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "react-tabs@npm:4.2.1"
+  dependencies:
+    clsx: ^1.1.0
+    prop-types: ^15.5.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-0 || ^18.0.0
+  checksum: a031f358373c274432c4030873e1e41c4c744df04dbdc077f453568bf6161b8c3036934052ca9db6569d974edfceac48b2038d402eddc898f0c5752a8f8d8a93
   languageName: node
   linkType: hard
 

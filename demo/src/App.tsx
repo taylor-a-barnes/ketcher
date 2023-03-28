@@ -12,6 +12,9 @@ import { OutputArea } from './components/OutputArea'
 import { initiallyHidden } from './constants/buttons'
 import { defaultTheme } from './constants/defaultTheme'
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import 'react-tabs/style/react-tabs.css'
+
 const GridWrapper = styled('div')`
   height: 100vh;
   width: 100vw;
@@ -22,7 +25,7 @@ const GridWrapper = styled('div')`
   grid-template-columns: 270px 320px 1fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
-  grid-template-areas: 'Panel Output Ketcher';
+  grid-template-areas: 'Panel Output OutputTabs';
   & > div {
     border: 1px solid grey;
   }
@@ -42,6 +45,11 @@ const PanelBox = styled('div')`
   overflow: auto;
   padding-right: 8px;
   padding-left: 8px;
+`
+
+const OutputTabsBox = styled('div')`
+  grid-area: OutputTabs;
+  height: 100vh;
 `
 
 const theme = createTheme(defaultTheme)
@@ -64,6 +72,23 @@ const getUniqueKey = (() => {
   }
 })()
 
+/*
+        <KetcherBox>
+          <Editor
+            key={editorKey}
+            staticResourcesUrl={process.env.PUBLIC_URL}
+            buttons={getHiddenButtonsConfig(hiddenButtons)}
+            structServiceProvider={structServiceProvider}
+            errorHandler={(err) => console.log(err)}
+            onInit={(ketcher: Ketcher) => {
+              ;(global as any).ketcher = ketcher
+              ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
+              global.ketcher.setMolecule('CN=C=O')
+            }}
+          />
+        </KetcherBox>
+*/
+
 const App = () => {
   const [outputValue, setOutputValue] = useState('')
   const [hiddenButtons, setHiddenButtons] = useState(initiallyHidden)
@@ -80,20 +105,27 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GridWrapper>
-        <KetcherBox>
-          <Editor
-            key={editorKey}
-            staticResourcesUrl={process.env.PUBLIC_URL}
-            buttons={getHiddenButtonsConfig(hiddenButtons)}
-            structServiceProvider={structServiceProvider}
-            errorHandler={(err) => console.log(err)}
-            onInit={(ketcher: Ketcher) => {
-              ;(global as any).ketcher = ketcher
-              ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
-              global.ketcher.setMolecule('CN=C=O')
-            }}
-          />
-        </KetcherBox>
+        <OutputTabsBox>
+          <Tabs>
+            <TabList>
+              <Tab>Structure</Tab>
+            </TabList>
+            <TabPanel>
+              <Editor
+                key={editorKey}
+                staticResourcesUrl={process.env.PUBLIC_URL}
+                buttons={getHiddenButtonsConfig(hiddenButtons)}
+                structServiceProvider={structServiceProvider}
+                errorHandler={(err) => console.log(err)}
+                onInit={(ketcher: Ketcher) => {
+                  ;(global as any).ketcher = ketcher
+                  ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
+                  global.ketcher.setMolecule('CN=C=O')
+                }}
+              />
+            </TabPanel>
+          </Tabs>
+        </OutputTabsBox>
         <PanelBox>
           <Panel
             printToTerminal={setOutputValue}
