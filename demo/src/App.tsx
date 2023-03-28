@@ -52,6 +52,10 @@ const OutputTabsBox = styled('div')`
   height: 100vh;
 `
 
+const ResultsBox = styled('div')`
+  height: 90vh;
+`
+
 const theme = createTheme(defaultTheme)
 
 const getHiddenButtonsConfig = (btnArr: string[]): ButtonsConfig => {
@@ -109,6 +113,8 @@ const App = () => {
           <Tabs>
             <TabList>
               <Tab>Structure</Tab>
+              <Tab>Calculation</Tab>
+              <Tab>Results</Tab>
             </TabList>
             <TabPanel>
               <Editor
@@ -124,14 +130,26 @@ const App = () => {
                 }}
               />
             </TabPanel>
+            <TabPanel>
+              <Panel
+                printToTerminal={setOutputValue}
+                hiddenButtons={hiddenButtons}
+                buttonsHideHandler={updateHiddenButtons}
+              />
+            </TabPanel>
+            <TabPanel>
+              <ResultsBox>
+                <OutputArea
+                  outputValue={outputValue}
+                  setOutputValue={setOutputValue}
+                />
+              </ResultsBox>
+            </TabPanel>
           </Tabs>
         </OutputTabsBox>
         <PanelBox>
-          <Panel
-            printToTerminal={setOutputValue}
-            hiddenButtons={hiddenButtons}
-            buttonsHideHandler={updateHiddenButtons}
-          />
+          <h1> Instructions </h1>
+          <p> Directions go here. </p>
         </PanelBox>
         <OutputBox>
           <OutputArea
