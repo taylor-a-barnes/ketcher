@@ -12,8 +12,12 @@ import { OutputArea } from './components/OutputArea'
 import { initiallyHidden } from './constants/buttons'
 import { defaultTheme } from './constants/defaultTheme'
 
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import 'react-tabs/style/react-tabs.css'
+import * as React from 'react'
+import { styled as mui_styled } from '@mui/material/styles'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
 const GridWrapper = styled('div')`
   height: 100vh;
@@ -31,11 +35,6 @@ const GridWrapper = styled('div')`
   }
 `
 
-const KetcherBox = styled('div')`
-  grid-area: Ketcher;
-  height: 100vh;
-`
-
 const PanelBox = styled('div')`
   grid-area: Panel;
   overflow: auto;
@@ -46,11 +45,96 @@ const PanelBox = styled('div')`
 const OutputTabsBox = styled('div')`
   grid-area: OutputTabs;
   height: 100vh;
+  width: 100%;
+  bgcolor: 'gray';
 `
 
 const TabsFillBox = styled('div')`
-  height: 93vh;
+  height: 100%;
 `
+
+interface StyledTabsProps {
+  children?: React.ReactNode
+  value: number
+  onChange: (event: React.SyntheticEvent, newValue: number) => void
+}
+
+const StyledTabs = mui_styled((props: StyledTabsProps) => (
+  <Tabs
+    {...props}
+    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+  />
+))({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+  '& .MuiTabs-indicatorSpan': {
+    maxWidth: 40,
+    width: '100%',
+    backgroundColor: '#635ee7'
+  }
+})
+
+interface StyledTabProps {
+  label: string
+}
+
+const StyledTab = mui_styled((props: StyledTabProps) => (
+  <Tab disableRipple {...props} />
+))(({ theme }) => ({
+  textTransform: 'none',
+  fontWeight: theme.typography.fontWeightRegular,
+  fontSize: theme.typography.pxToRem(15),
+  marginRight: theme.spacing(1),
+  color: 'rgba(255, 255, 255, 0.7)',
+  '&.Mui-selected': {
+    color: '#fff'
+  },
+  '&.Mui-focusVisible': {
+    backgroundColor: 'rgba(100, 95, 228, 0.32)'
+  }
+}))
+
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      style={{
+        height: '85%',
+        boxSizing: 'border-box',
+        border: '1px solid red'
+      }}
+      {...other}
+    >
+      {value === index && (
+        <Box
+          sx={{
+            p: 3,
+            boxSizing: 'border-box',
+            border: '10px solid blue',
+            height: '100%'
+          }}
+        >
+          <Typography sx={{ height: '100%' }}>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  )
+}
+//          <Typography>{children}</Typography>
 
 const theme = createTheme(defaultTheme)
 
@@ -72,25 +156,7 @@ const getUniqueKey = (() => {
   }
 })()
 
-/*
-        <KetcherBox>
-          <Editor
-            key={editorKey}
-            staticResourcesUrl={process.env.PUBLIC_URL}
-            buttons={getHiddenButtonsConfig(hiddenButtons)}
-            structServiceProvider={structServiceProvider}
-            errorHandler={(err) => console.log(err)}
-            onInit={(ketcher: Ketcher) => {
-              ;(global as any).ketcher = ketcher
-              ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
-              global.ketcher.setMolecule('CN=C=O')
-            }}
-          />
-        </KetcherBox>
-*/
-//<Tabs style={{height: '100%', 'max-height': '100vh', border: '2px solid red'}}>
-
-const App = () => {
+export default function CustomizedTabs() {
   const [outputValue, setOutputValue] = useState('')
   const [hiddenButtons, setHiddenButtons] = useState(initiallyHidden)
   const [editorKey, setEditorKey] = useState('first-editor-key')
@@ -103,6 +169,12 @@ const App = () => {
     [setHiddenButtons, setEditorKey]
   )
 
+  const [value, setValue] = React.useState(0)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <GridWrapper>
@@ -110,15 +182,61 @@ const App = () => {
           <h1> Instructions </h1>
           <p> Directions go here. </p>
         </PanelBox>
-        <OutputTabsBox>
-          <Tabs>
-            <TabList>
-              <Tab>Structure</Tab>
-              <Tab>Calculation</Tab>
-              <Tab>Results</Tab>
-            </TabList>
-            <TabPanel>
-              <TabsFillBox>
+        <Box sx={{ width: '100%', height: '100vh', bgcolor: 'gray' }}>
+          <Box sx={{ bgcolor: '#2e1534' }}>
+            <StyledTabs
+              value={value}
+              onChange={handleChange}
+              aria-label="styled tabs example"
+            >
+              <StyledTab label="Workflows" />
+              <StyledTab label="Datasets" />
+              <StyledTab label="Connections" />
+            </StyledTabs>
+            <Box sx={{ p: 3 }} />
+          </Box>
+          <TabPanel value={value} index={0}>
+            <Editor
+              key={editorKey}
+              staticResourcesUrl={process.env.PUBLIC_URL}
+              buttons={getHiddenButtonsConfig(hiddenButtons)}
+              structServiceProvider={structServiceProvider}
+              errorHandler={(err) => console.log(err)}
+              onInit={(ketcher: Ketcher) => {
+                ;(global as any).ketcher = ketcher
+                ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
+                global.ketcher.setMolecule('CN=C=O')
+              }}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Panel
+              printToTerminal={setOutputValue}
+              hiddenButtons={hiddenButtons}
+              buttonsHideHandler={updateHiddenButtons}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <div
+              style={{
+                height: '100%',
+                boxSizing: 'border-box',
+                border: '5px solid green'
+              }}
+            >
+              <OutputArea
+                outputValue={outputValue}
+                setOutputValue={setOutputValue}
+              />
+            </div>
+          </TabPanel>
+        </Box>
+      </GridWrapper>
+    </ThemeProvider>
+  )
+}
+
+/*
                 <Editor
                   key={editorKey}
                   staticResourcesUrl={process.env.PUBLIC_URL}
@@ -133,30 +251,6 @@ const App = () => {
                     global.ketcher.setMolecule('CN=C=O')
                   }}
                 />
-              </TabsFillBox>
-            </TabPanel>
-            <TabPanel>
-              <TabsFillBox>
-                <Panel
-                  printToTerminal={setOutputValue}
-                  hiddenButtons={hiddenButtons}
-                  buttonsHideHandler={updateHiddenButtons}
-                />
-              </TabsFillBox>
-            </TabPanel>
-            <TabPanel>
-              <TabsFillBox>
-                <OutputArea
-                  outputValue={outputValue}
-                  setOutputValue={setOutputValue}
-                />
-              </TabsFillBox>
-            </TabPanel>
-          </Tabs>
-        </OutputTabsBox>
-      </GridWrapper>
-    </ThemeProvider>
-  )
-}
+*/
 
-export default App
+//    <Box sx={{ width: '100%', height: '100vh', bgcolor: 'gray' }}>
