@@ -22,10 +22,10 @@ const GridWrapper = styled('div')`
   max-width: 100vw;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 270px 320px 1fr;
+  grid-template-columns: 40% 1fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
-  grid-template-areas: 'Panel Output OutputTabs';
+  grid-template-areas: 'Panel OutputTabs';
   & > div {
     border: 1px solid grey;
   }
@@ -34,10 +34,6 @@ const GridWrapper = styled('div')`
 const KetcherBox = styled('div')`
   grid-area: Ketcher;
   height: 100vh;
-`
-
-const OutputBox = styled('div')`
-  grid-area: Output;
 `
 
 const PanelBox = styled('div')`
@@ -52,8 +48,8 @@ const OutputTabsBox = styled('div')`
   height: 100vh;
 `
 
-const ResultsBox = styled('div')`
-  height: 90vh;
+const TabsFillBox = styled('div')`
+  height: 93vh;
 `
 
 const theme = createTheme(defaultTheme)
@@ -92,6 +88,7 @@ const getUniqueKey = (() => {
           />
         </KetcherBox>
 */
+//<Tabs style={{height: '100%', 'max-height': '100vh', border: '2px solid red'}}>
 
 const App = () => {
   const [outputValue, setOutputValue] = useState('')
@@ -109,6 +106,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GridWrapper>
+        <PanelBox>
+          <h1> Instructions </h1>
+          <p> Directions go here. </p>
+        </PanelBox>
         <OutputTabsBox>
           <Tabs>
             <TabList>
@@ -117,46 +118,42 @@ const App = () => {
               <Tab>Results</Tab>
             </TabList>
             <TabPanel>
-              <Editor
-                key={editorKey}
-                staticResourcesUrl={process.env.PUBLIC_URL}
-                buttons={getHiddenButtonsConfig(hiddenButtons)}
-                structServiceProvider={structServiceProvider}
-                errorHandler={(err) => console.log(err)}
-                onInit={(ketcher: Ketcher) => {
-                  ;(global as any).ketcher = ketcher
-                  ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
-                  global.ketcher.setMolecule('CN=C=O')
-                }}
-              />
+              <TabsFillBox>
+                <Editor
+                  key={editorKey}
+                  staticResourcesUrl={process.env.PUBLIC_URL}
+                  buttons={getHiddenButtonsConfig(hiddenButtons)}
+                  structServiceProvider={structServiceProvider}
+                  errorHandler={(err) => console.log(err)}
+                  onInit={(ketcher: Ketcher) => {
+                    ;(global as any).ketcher = ketcher
+                    ;(global as any).KetcherFunctions = KetcherAPI(
+                      global.ketcher
+                    )
+                    global.ketcher.setMolecule('CN=C=O')
+                  }}
+                />
+              </TabsFillBox>
             </TabPanel>
             <TabPanel>
-              <Panel
-                printToTerminal={setOutputValue}
-                hiddenButtons={hiddenButtons}
-                buttonsHideHandler={updateHiddenButtons}
-              />
+              <TabsFillBox>
+                <Panel
+                  printToTerminal={setOutputValue}
+                  hiddenButtons={hiddenButtons}
+                  buttonsHideHandler={updateHiddenButtons}
+                />
+              </TabsFillBox>
             </TabPanel>
             <TabPanel>
-              <ResultsBox>
+              <TabsFillBox>
                 <OutputArea
                   outputValue={outputValue}
                   setOutputValue={setOutputValue}
                 />
-              </ResultsBox>
+              </TabsFillBox>
             </TabPanel>
           </Tabs>
         </OutputTabsBox>
-        <PanelBox>
-          <h1> Instructions </h1>
-          <p> Directions go here. </p>
-        </PanelBox>
-        <OutputBox>
-          <OutputArea
-            outputValue={outputValue}
-            setOutputValue={setOutputValue}
-          />
-        </OutputBox>
       </GridWrapper>
     </ThemeProvider>
   )
