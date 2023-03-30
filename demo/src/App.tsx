@@ -31,7 +31,7 @@ const GridWrapper = styled('div')`
   gap: 0px 0px;
   grid-template-areas: 'Panel OutputTabs';
   & > div {
-    border: 1px solid grey;
+    border: 0px solid grey;
   }
 `
 
@@ -43,20 +43,20 @@ const GridTabWrapper = styled('div')`
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 70px 1fr;
+  grid-template-rows: 50px 1fr;
   gap: 0px 0px;
   grid-template-areas:
     'TabsBox'
     'TabPanelBox';
   & > div {
-    border: 1px solid grey;
+    border: 0px solid grey;
   }
 `
 
 const TabsBoxWrapper = styled('div')`
   grid-area: TabsBox;
   width: 100%;
-  background: grey;
+  background: #000000;
   & > div {
     border: 0px solid red;
   }
@@ -66,9 +66,13 @@ const TabPanelBoxWrapper = styled('div')`
   grid-area: TabPanelBox;
   width: 100%;
   height: 100%;
-  background: red;
+  background: white;
+  box-sizing: 'border-box',
+  boxSizing: 'border-box',
   & > div {
     border: 0px solid red;
+    box-sizing: 'border-box',
+    boxSizing: 'border-box',
   }
 `
 
@@ -110,7 +114,7 @@ const StyledTabs = mui_styled((props: StyledTabsProps) => (
   '& .MuiTabs-indicatorSpan': {
     maxWidth: 40,
     width: '100%',
-    backgroundColor: '#635ee7'
+    backgroundColor: '#ED1C24'
   }
 })
 
@@ -152,7 +156,7 @@ function TabPanel(props: TabPanelProps) {
       style={{
         height: '100%',
         boxSizing: 'border-box',
-        border: '1px solid red'
+        border: '0px solid red'
       }}
       {...other}
     >
@@ -161,8 +165,8 @@ function TabPanel(props: TabPanelProps) {
           sx={{
             p: 0,
             boxSizing: 'border-box',
-            border: '10px solid blue',
-            height: '95%'
+            border: '0px solid blue',
+            height: '100%'
           }}
         >
           <Typography sx={{ height: '100%' }}>{children}</Typography>
@@ -171,7 +175,7 @@ function TabPanel(props: TabPanelProps) {
     </div>
   )
 }
-//          <Typography>{children}</Typography>
+//          <Typography sx={{ height: '100%' }}>{children}</Typography>
 
 const theme = createTheme(defaultTheme)
 
@@ -226,9 +230,9 @@ export default function CustomizedTabs() {
               onChange={handleChange}
               aria-label="styled tabs example"
             >
-              <StyledTab label="Workflows" />
-              <StyledTab label="Datasets" />
-              <StyledTab label="Connections" />
+              <StyledTab label="Structure" />
+              <StyledTab label="Calculation" />
+              <StyledTab label="Results" />
             </StyledTabs>
           </TabsBoxWrapper>
           <TabPanelBoxWrapper>
@@ -242,11 +246,9 @@ export default function CustomizedTabs() {
                 onInit={(ketcher: Ketcher) => {
                   ;(global as any).ketcher = ketcher
                   ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
-                  global.ketcher.setMolecule('CN=C=O')
                 }}
               />
             </TabPanel>
-
             <TabPanel value={value} index={1}>
               <Panel
                 printToTerminal={setOutputValue}
@@ -259,7 +261,7 @@ export default function CustomizedTabs() {
                 style={{
                   height: '100%',
                   boxSizing: 'border-box',
-                  border: '5px solid green'
+                  border: '0px solid green'
                 }}
               >
                 <OutputArea
@@ -275,6 +277,7 @@ export default function CustomizedTabs() {
   )
 }
 
+//                  ;global.ketcher.setMolecule('CN=C=O')
 //GridTabWrapper
 /*
                 <Editor
