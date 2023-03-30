@@ -35,6 +35,43 @@ const GridWrapper = styled('div')`
   }
 `
 
+const GridTabWrapper = styled('div')`
+  height: 100vh;
+  width: 100%;
+  max-height: 100vh;
+  max-width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 70px 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    'TabsBox'
+    'TabPanelBox';
+  & > div {
+    border: 1px solid grey;
+  }
+`
+
+const TabsBoxWrapper = styled('div')`
+  grid-area: TabsBox;
+  width: 100%;
+  background: grey;
+  & > div {
+    border: 0px solid red;
+  }
+`
+
+const TabPanelBoxWrapper = styled('div')`
+  grid-area: TabPanelBox;
+  width: 100%;
+  height: 100%;
+  background: red;
+  & > div {
+    border: 0px solid red;
+  }
+`
+
 const PanelBox = styled('div')`
   grid-area: Panel;
   overflow: auto;
@@ -113,7 +150,7 @@ function TabPanel(props: TabPanelProps) {
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
       style={{
-        height: '85%',
+        height: '100%',
         boxSizing: 'border-box',
         border: '1px solid red'
       }}
@@ -122,10 +159,10 @@ function TabPanel(props: TabPanelProps) {
       {value === index && (
         <Box
           sx={{
-            p: 3,
+            p: 0,
             boxSizing: 'border-box',
             border: '10px solid blue',
-            height: '100%'
+            height: '95%'
           }}
         >
           <Typography sx={{ height: '100%' }}>{children}</Typography>
@@ -182,8 +219,8 @@ export default function CustomizedTabs() {
           <h1> Instructions </h1>
           <p> Directions go here. </p>
         </PanelBox>
-        <Box sx={{ width: '100%', height: '100vh', bgcolor: 'gray' }}>
-          <Box sx={{ bgcolor: '#2e1534' }}>
+        <GridTabWrapper>
+          <TabsBoxWrapper>
             <StyledTabs
               value={value}
               onChange={handleChange}
@@ -193,49 +230,52 @@ export default function CustomizedTabs() {
               <StyledTab label="Datasets" />
               <StyledTab label="Connections" />
             </StyledTabs>
-            <Box sx={{ p: 3 }} />
-          </Box>
-          <TabPanel value={value} index={0}>
-            <Editor
-              key={editorKey}
-              staticResourcesUrl={process.env.PUBLIC_URL}
-              buttons={getHiddenButtonsConfig(hiddenButtons)}
-              structServiceProvider={structServiceProvider}
-              errorHandler={(err) => console.log(err)}
-              onInit={(ketcher: Ketcher) => {
-                ;(global as any).ketcher = ketcher
-                ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
-                global.ketcher.setMolecule('CN=C=O')
-              }}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Panel
-              printToTerminal={setOutputValue}
-              hiddenButtons={hiddenButtons}
-              buttonsHideHandler={updateHiddenButtons}
-            />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <div
-              style={{
-                height: '100%',
-                boxSizing: 'border-box',
-                border: '5px solid green'
-              }}
-            >
-              <OutputArea
-                outputValue={outputValue}
-                setOutputValue={setOutputValue}
+          </TabsBoxWrapper>
+          <TabPanelBoxWrapper>
+            <TabPanel value={value} index={0}>
+              <Editor
+                key={editorKey}
+                staticResourcesUrl={process.env.PUBLIC_URL}
+                buttons={getHiddenButtonsConfig(hiddenButtons)}
+                structServiceProvider={structServiceProvider}
+                errorHandler={(err) => console.log(err)}
+                onInit={(ketcher: Ketcher) => {
+                  ;(global as any).ketcher = ketcher
+                  ;(global as any).KetcherFunctions = KetcherAPI(global.ketcher)
+                  global.ketcher.setMolecule('CN=C=O')
+                }}
               />
-            </div>
-          </TabPanel>
-        </Box>
+            </TabPanel>
+
+            <TabPanel value={value} index={1}>
+              <Panel
+                printToTerminal={setOutputValue}
+                hiddenButtons={hiddenButtons}
+                buttonsHideHandler={updateHiddenButtons}
+              />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <div
+                style={{
+                  height: '100%',
+                  boxSizing: 'border-box',
+                  border: '5px solid green'
+                }}
+              >
+                <OutputArea
+                  outputValue={outputValue}
+                  setOutputValue={setOutputValue}
+                />
+              </div>
+            </TabPanel>
+          </TabPanelBoxWrapper>
+        </GridTabWrapper>
       </GridWrapper>
     </ThemeProvider>
   )
 }
 
+//GridTabWrapper
 /*
                 <Editor
                   key={editorKey}
